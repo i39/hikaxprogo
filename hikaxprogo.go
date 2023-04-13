@@ -7,6 +7,7 @@ import (
 
 	"bytes"
 	"encoding/hex"
+	json "encoding/json"
 	xml "encoding/xml"
 	"errors"
 	"io"
@@ -133,8 +134,8 @@ func (hik *HikISAPI) makeRequest(method string, url string, body string) (*http.
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Add("Accept", "application/xml")
-	req.Header.Add("Content-Type", "application/xml")
+	// req.Header.Add("Accept", "application/xml")
+	// req.Header.Add("Content-Type", "application/xml")
 	req.Header.Add("Cookie", hik.session.String())
 	resp, err := client.Do(req)
 	if err != nil {
@@ -148,10 +149,13 @@ func (hik *HikISAPI) makeRequest(method string, url string, body string) (*http.
 	return resp, nil
 }
 
-func (hik *HikISAPI) ZoneStatus() (string, error) {
+func (hik *HikISAPI) ZoneStatus() (ZoneList, error) {
+
+	z := ZoneList{}
+
 	resp, err := hik.makeRequest("GET", hik.host+":"+hik.port+ZoneStatus, "")
 	if err != nil {
-		return "", err
+		return z, err
 	}
 	defer resp.Body.Close()
 	// Read the response body
@@ -159,7 +163,14 @@ func (hik *HikISAPI) ZoneStatus() (string, error) {
 	if err != nil {
 		panic(err)
 	}
-	return string(body), nil
+
+	// Unmarshal the JSON from the response into the struct
+	err = json.Unmarshal(body, &z)
+	if err != nil {
+		return z, err
+	}
+
+	return z, nil
 }
 
 func New(host string, port string, username string, password string) *HikISAPI {

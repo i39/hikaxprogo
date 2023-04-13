@@ -27,7 +27,7 @@ const (
 	StatusCap            = "/ISAPI/SecurityCP/status/capabilities"
 	HostStatus           = "/ISAPI/SecurityCP/status/host"
 	PeripheralsStatus    = "/ISAPI/SecurityCP/status/exDevStatus"
-	ZoneStatus           = "/ISAPI/SecurityCP/status/zones"
+	ZoneStatus           = "/ISAPI/SecurityCP/status/zones?format=xml"
 	BypassZone           = "/ISAPI/SecurityCP/control/bypass/"
 	RecoverBypassZone    = "/ISAPI/SecurityCP/control/Recoverbypass/"
 	InterfaceInfo        = "/ISAPI/System/Network/interfaces"
